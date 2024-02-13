@@ -1,0 +1,230 @@
+{
+    "games": [
+      {
+        "title": "Seaworld",
+        "percentage": 87.45,
+        "provider": {
+          "id": 1,
+          "name": "Mega888"
+        },
+        "id": 1
+      },
+      {
+        "title": "Great88",
+        "percentage": 92.36,
+        "provider": {
+          "id": 1,
+          "name": "Mega888"
+        },
+        "id": 2
+      },
+      {
+        "title": "Iceland",
+        "percentage": 78.21,
+        "provider": {
+          "id": 1,
+          "name": "Mega888"
+        },
+        "id": 3
+      },
+      {
+        "title": "Lotus Legend",
+        "percentage": 84.79,
+        "provider": {
+          "id": 1,
+          "name": "Mega888"
+        },
+        "id": 4
+      },
+      {
+        "title": "Bonus Bear",
+        "percentage": 90.03,
+        "provider": {
+          "id": 1,
+          "name": "Mega888"
+        },
+        "id": 5
+      },
+      {
+        "title": "Boyking",
+        "percentage": 81.27,
+        "provider": {
+          "id": 2,
+          "name": "918Kiss"
+        },
+        "id": 6
+      },
+      {
+        "title": "Panthermoon",
+        "percentage": 89.54,
+        "provider": {
+          "id": 2,
+          "name": "918Kiss"
+        },
+        "id": 7
+      },
+      {
+        "title": "Greatblue",
+        "percentage": 77.68,
+        "provider": {
+          "id": 2,
+          "name": "918Kiss"
+        },
+        "id": 8
+      },
+      {
+        "title": "Seaworld",
+        "percentage": 95.12,
+        "provider": {
+          "id": 2,
+          "name": "918Kiss"
+        },
+        "id": 9
+      },
+      {
+        "title": "Iceland",
+        "percentage": 73.89,
+        "provider": {
+          "id": 2,
+          "name": "918Kiss"
+        },
+        "id": 10
+      },
+      {
+        "title": "Dolphin Reef",
+        "percentage": 88.76,
+        "provider": {
+          "id": 3,
+          "name": "Pussy888"
+        },
+        "id": 11
+      },
+      {
+        "title": "Twister",
+        "percentage": 93.45,
+        "provider": {
+          "id": 3,
+          "name": "Pussy888"
+        },
+        "id": 12
+      },
+      {
+        "title": "T-Rex",
+        "percentage": 79.33,
+        "provider": {
+          "id": 3,
+          "name": "Pussy888"
+        },
+        "id": 13
+      },
+      {
+        "title": "Dragon Gold",
+        "percentage": 85.64,
+        "provider": {
+          "id": 3,
+          "name": "Pussy888"
+        },
+        "id": 14
+      },
+      {
+        "title": "God of Wealth",
+        "percentage": 91.02,
+        "provider": {
+          "id": 3,
+          "name": "Pussy888"
+        },
+        "id": 15
+      },
+      {
+        "title": "Archer",
+        "percentage": 84.17,
+        "provider": {
+          "id": 4,
+          "name": "Playtech"
+        },
+        "id": 16
+      },
+      {
+        "title": "Great Blue",
+        "percentage": 90.85,
+        "provider": {
+          "id": 4,
+          "name": "Playtech"
+        },
+        "id": 17
+      },
+      {
+        "title": "Caishen Ways",
+        "percentage": 76.54,
+        "provider": {
+          "id": 4,
+          "name": "Playtech"
+        },
+        "id": 18
+      },
+      {
+        "title": "Dragon Champions",
+        "percentage": 83.26,
+        "provider": {
+          "id": 4,
+          "name": "Playtech"
+        },
+        "id": 19
+      },
+      {
+        "title": "Age of the Gods",
+        "percentage": 87.93,
+        "provider": {
+          "id": 4,
+          "name": "Playtech"
+        },
+        "id": 20
+      },
+      {
+        "title": "Gates of Olympus",
+        "percentage": 92.14,
+        "provider": {
+          "id": 5,
+          "name": "Pragmatic Play"
+        },
+        "id": 21
+      },
+      {
+        "title": "Starlight Princess",
+        "percentage": 87.45,
+        "provider": {
+          "id": 5,
+          "name": "Pragmatic Play"
+        },
+        "id": 22
+      },
+      {
+        "title": "Madame Destiny Megaways",
+        "percentage": 80.67,
+        "provider": {
+          "id": 5,
+          "name": "Pragmatic Play"
+        },
+        "id": 23
+      },
+      {
+        "title": "Sugar Rush",
+        "percentage": 85.34,
+        "provider": {
+          "id": 5,
+          "name": "Pragmatic Play"
+        },
+        "id": 24
+      },
+      {
+        "title": "Sweet Bonanza",
+        "percentage": 91.78,
+        "provider": {
+          "id": 5,
+          "name": "Pragmatic Play"
+        },
+        "id": 25
+      }
+    ]
+  }
+  

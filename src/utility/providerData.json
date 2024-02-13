@@ -1,0 +1,30 @@
+{
+    "providers":[
+        {
+            "id": 1,
+            "name": "Mega888"
+        },
+        {
+            "id": 2,
+            "name": "918Kiss"
+
+        },
+        {
+            "id": 3,
+            "name": "Pussy888"
+
+        },
+        {
+
+            "id": 4,
+            "name": "Playtech"
+        },
+        {
+            "id": 5,
+            "name": "Pragmatic Play"
+
+        }
+
+    ]
+
+}
