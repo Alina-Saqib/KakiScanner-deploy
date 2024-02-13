@@ -147,6 +147,8 @@ const WinPage = () => {
           backgroundRepeat:"no-repeat",
           backgroundPosition:"50% 50%",
           my:8,
+          maxHeight:"200px",
+          overflowY:"auto",
           width:{xs:'90%', md:"35%"},
           p:1
         }}>
