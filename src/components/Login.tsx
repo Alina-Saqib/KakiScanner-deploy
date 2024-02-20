@@ -43,7 +43,9 @@ const Login = ({handleIsLogin}: any) => {
         flexDirection:"column",
         justifyContent:"center",
         alignItems:"center",
-        p:"25px 52px"
+        p:"25px 52px",
+        maxHeight: "150vh",
+        height: { xs: "100vh", md: "115vh" },
       }}>
         <img 
 
