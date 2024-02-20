@@ -14,7 +14,7 @@ import Layout from "../PageLayout/Layout";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const Login = () => {
+const Login = ({handleIsLogin}: any) => {
  console.log('login')
   const [username , setUsername] = useState("");
   const [password, setPassword] = useState("")
@@ -23,7 +23,10 @@ const Login = () => {
   const handleLogin = () =>{
 
     if(username === 'test' && password === '1234'){
-      navigate('/scan-games')
+      localStorage.setItem('isLogin','true')
+      handleIsLogin();
+      navigate('/')
+      
       toast.success("Login successful")
      
       
@@ -170,7 +173,7 @@ const Login = () => {
       <img src={whatsappIcon} width="80px"/>
       </Link>
       <Link>
-      <img src={telegramIcon} width="74px" style={{marginLeft:"42px"}}/>
+      <img src={telegramIcon} width="81px" style={{marginLeft:"42px"}}/>
       </Link>
 
       </Box>

@@ -8,11 +8,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
 
 import WinPage from './components/WinPage'
+import { useState } from 'react'
 
 
 function App() {
 
   
+  const [isLogin , setIsLogin] = useState(Boolean(localStorage.getItem('isLogin')))
+
+  const handleIsLogin = () =>{
+
+    setIsLogin(true);
+  }
+
   
 
   return (
@@ -20,10 +28,16 @@ function App() {
   <ToastContainer/>
     <Routes>
       <Route path='/*' element={<Navigate to="/"/>}/>
-      <Route path='/scan-games' element={<ScanGames/>}/>
+      
+     {isLogin ? 
+     <>
+     <Route path='/' element={<ScanGames/>}/>
       <Route path='/select-provider' element={<ProviderScan/>}/>
       <Route path='/success-cheat/:id' element={<WinPage/>}/>
-    <Route path='/' element={<Login/>}/>
+      </> :
+      <Route path='/' element={<Login handleIsLogin={handleIsLogin}/>}/>
+      }
+    
     </Routes>
     </>
   )

@@ -12,6 +12,7 @@ const Layout = ({children}: any) => {
     backgroundSize:"cover",
     backgroundPosition:"50% 80%",
     height:"100%",
+
     //   p:'25px 52px'
     }}
   >

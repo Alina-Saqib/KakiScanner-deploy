@@ -12,34 +12,53 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import data from '../utility/providerData.json';
+import gamedata from '../utility/data.json'
+
 
 const ProviderScan = () => {
-  // const menuItems = [
-  //   "Pilih Cheater",
-  //   "Cheat Auto Scatter",
-  //   "Auto Sensational",
-  //   "Auto wild",
-  // ];
+  const menuItems = [
+    "Pilih Cheater",
+    "Cheat Auto Scatter",
+    "Auto Sensational",
+    "Auto wild",
+  ];
 
   const [processing, setProcessing] = useState(false);
   const [serverMessages, setServerMessages] = useState([]);
   const [providers, setProviders] = useState([]);
-  const [providerId , setProviderId]=useState()
+  const [providerId , setProviderId]=useState();
+  const [providerGames , setProviderGames] = useState([]);
+  const [cheatSheet , setCheatSheet] = useState("");
+  console.log(providerGames)
+
+  const getProvidersGames = async () =>{
+
+    const newData: any = [];
+
+    providers.forEach((provider: any) => {
+      const providersGames = gamedata.games.filter(game => game.provider.name === provider?.name);
+      const sortedGames = providersGames.sort((a, b) => b.percentage - a.percentage);
+      newData.push(sortedGames);
+    });
+
+   setProviderGames(newData)
+
+
+
+   
+  }
+
+  useEffect(()=>{
+    getProvidersGames()
+  },[])
+
+
     const navigate = useNavigate()
 
   const getProviders = async ()=>{
 
     setProviders(data?.providers as any)
 
-    // const response = await getAllProviders();
-
-    // if(response?.status === 200){
-    //   setProviders(response.data)
-    // }
-    // else{
-    //   console.log("could not fetch Providers") ;
-      
-    // }
   }
   useEffect(()=>{
     getProviders()
@@ -49,7 +68,7 @@ const ProviderScan = () => {
   const handleSelectChange = (e: any) =>{
     e.preventDefault();
     setProvider(e.target.value);
-    const selectedProvider: any = providers.find((oneprovider: any) => oneprovider.name === e.target.value);
+   const selectedProvider: any = providers.find((oneprovider: any) => oneprovider.name === e.target.value);
     console.log(selectedProvider)
     setProviderId(selectedProvider?.id)
 
@@ -60,8 +79,14 @@ const ProviderScan = () => {
     const messages: any = [];
 
     if(!providerId){
-      toast.error("select a Provider")
+      toast.error("Select a Provider")
       return
+    }
+
+    if(!cheatSheet){
+      toast.error("Select cheat function")
+      return
+
     }
 
 
@@ -117,6 +142,34 @@ const ProviderScan = () => {
     navigate(`/success-cheat/${providerId}`)
   };
 
+  // const displayProviders = async() =>{
+
+  //   let data: any = []
+  //   for (const provider of providers as any) {
+  //     const providerGames = gamedata.games.filter(game => game.provider.name === provider?.name);
+  //     const sortedGames = providerGames.sort((a, b) => b.percentage - a.percentage);
+
+  
+
+  //     // Display each game of the provider
+  //     for (const game of sortedGames) {
+  //       data.push(`${game.provider.name}/>KakiScanning=${game.title}                [Win ${game.percentage}]`);
+  //       await  simulateProviderProcessing('', data);
+  //     }
+  //   }
+
+  //   setProviderMessages(data)
+
+  // }
+
+ 
+
+  // const simulateProviderProcessing = async (message: any, messages: any) => {
+  //   messages.push(message);
+  //   setProviderMessages([...messages] as any);
+  //   await new Promise((resolve) => setTimeout(resolve, 2000)); 
+  // };
+
   const simulateProcessing = async (message: any, messages: any) => {
     messages.push(message);
     setServerMessages([...messages] as any);
@@ -130,9 +183,11 @@ const ProviderScan = () => {
           pt: 6,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          //justifyContent: "center",
           alignItems: "center",
-          height:'100vh'
+          minHeight:'100vh',
+          maxheight:'300vh',
+          pb:6
         }}
       >
         <Typography
@@ -166,6 +221,47 @@ const ProviderScan = () => {
         >
           Provider
         </Button>
+        {/* <Box
+        sx={{
+          background:`url(${background})`,
+          backgroundSize:"cover",
+          backgroundRepeat:"no-repeat",
+          backgroundPosition:"50% 50%",
+          my:4,
+          width:{xs:'90%', md:"35%"},
+          p:1
+        }}>
+          
+           {providers.map((provider: any) => {
+            const providerGames = gamedata.games.filter(game => game.provider.name === provider?.name);
+            const sortedGames = providerGames.sort((a, b) => b.percentage - a.percentage);
+            return sortedGames.map((game, index) => (
+              <Box key={index} sx={{display:"flex", justifyContent:"space-between",color:"#C8AC2F"}}>
+                <Typography sx={{fontWeight:"bold",fontSize:{xs:"12px",md:"14px"}}}>
+                  {`${provider?.name}/>KakiScanning=${game.title}`}
+                </Typography>
+                <Typography sx={{fontWeight:"bold",fontSize:{xs:"12px",md:"14px"}}}>
+                  {`[Win ${game.percentage}]`}
+                </Typography>
+              </Box>
+            ));
+          })} 
+          {providerGames.map((games: any, index) => (
+        <div key={index}>
+            {games?.map((game: any) => (
+              <Box key={index} sx={{display:"flex", justifyContent:"space-between",color:"#C8AC2F"}}>
+              <Typography sx={{fontWeight:"bold",fontSize:{xs:"12px",md:"14px"}}}>
+                {`${game?.provider?.name}/>KakiScanning=${game.title}`}
+              </Typography>
+              <Typography sx={{fontWeight:"bold",fontSize:{xs:"12px",md:"14px"}}}>
+                {`[Win ${game.percentage}]`}
+              </Typography>
+            </Box>
+            ))}
+        
+        </div>
+      ))} 
+        </Box> */}
 
         <TextField
           select
@@ -188,9 +284,37 @@ const ProviderScan = () => {
             },
           }}
         >
-          {providers.map((item: any) => (
-            <MenuItem key={item.id} value={item.name} sx={{ color: "green" }}>
+          {providers.map((item: any,index) => (
+            <MenuItem key={index} value={item.name} sx={{ color: "green" }}>
               {item.name}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <TextField
+          select
+          name="cheatSheet"
+          value={cheatSheet}
+          onChange={(e)=>  setCheatSheet(e.target.value)}
+          SelectProps={{
+            IconComponent: KeyboardArrowDownIcon,
+          }}
+          label={cheatSheet === "" ? "Select Cheat function" : ""}
+          InputLabelProps={{ shrink: false }}
+          sx={{
+            borderRadius: "14px",
+            width: { xs: "50%", md: "15%" },
+            mt: 2,
+            bgcolor: "#FFFFFF",
+            color: "green",
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
+          }}
+        >
+          {menuItems.map((item: any,index) => (
+            <MenuItem key={index} value={item} sx={{ color: "green" }}>
+              {item}
             </MenuItem>
           ))}
         </TextField>
@@ -233,7 +357,7 @@ const ProviderScan = () => {
               <Box
                 sx={{
                   bgcolor: "#202124",
-                  width: {xs:"50%",md:"40%"},
+                  width: {xs:"60%",md:"50%"},
                   pl: 1,
                 }}
               >

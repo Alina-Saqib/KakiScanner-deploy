@@ -1,94 +1,111 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import Layout from "../PageLayout/Layout";
-import CircleIcon from '@mui/icons-material/Circle';
+import CircleIcon from "@mui/icons-material/Circle";
 // import RectangleIcon from '@mui/icons-material/Rectangle';
 import { useEffect, useState } from "react";
 // import { getFiveRandomGames } from "../api_calls/Games/getFiveRandomGames";
 import { useNavigate } from "react-router-dom";
-import data from '../utility/data.json';
+import data from "../utility/data.json";
 import { shuffleArray } from "../utility/shuffleFunction";
-import {faker} from '@faker-js/faker'
+import malaysianflag from "../assets/malaysian-flag.png";
+import playerUsername from "../utility/playerUsername.json";
+import loader from "../assets/loader.gif";
 
 const ScanGames = () => {
+  const navigate = useNavigate();
+  const [names, setNames] = useState<any>([]);
 
-  // const dummyData = [
-  //   { name: "Mega888", title: "Seaworld", percent: "96.5%" },
-  //   { name: "918Kiss", title: "Wukong", percent: "88.5%" },
-  //   { name: "Pragmatic Play", title: "Starlight", percent: "23.5%" },
-  //   { name: "Pussy888", title: "Highway Kings", percent: "78.5%" },
-  //   { name: "Playtech", title: "Blue Wizards", percent: "93.76%" },
-  // ];
-  const navigate = useNavigate()
-  const [names, setNames] = useState(["forcone123","olive","Bob23","MyOne34"]);
- 
+  const [games, setGames] = useState([]);
+
+  const [visibleNames, setVisibleNames] = useState<any>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const [fadeOutName, setFadeOutName] = useState(null);
-  // const [slideOut, setSlideOut] = useState(false);
-
-  const generateRandomNames = (count: any) => {
-    const names = [];
-    for (let i = 0; i < count; i++) {
-      const randomName = faker.internet.userName();
-      names.push(randomName);
-    }
-    return names;
-  };
-  const [games , setGames] = useState([]);
+  const [firstRun, setFirstRun] = useState(true);
 
   useEffect(() => {
-    
+    const shuffledData = shuffleArray(playerUsername.username);
+    setNames(shuffledData);
+  }, []);
+
+  const [fadeOut, setFadeOut] = useState(false);
+
+  useEffect(() => {
     const interval = setInterval(() => {
-      // const shuffledNames = shuffleArray(generateRandomNames(4)); 
-      setFadeOutName(names[0] as any); 
-     // setSlideOut(true);
+      setCurrentIndex((prevIndex) =>
+        prevIndex === names.length - 1 ? 0 : prevIndex + 1
+      );
+      console.log(firstRun);
+      if (firstRun && visibleNames.length === 3) {
+        setFadeOutName(visibleNames[0]);
+        setFirstRun(false);
+      } else {
+        setFadeOutName(visibleNames[1]);
+      }
+
+      setFadeOut(true);
+
       setTimeout(() => {
-        setNames(prevNames => {
-          const newNames = prevNames.slice(1); 
-          newNames.push(generateRandomNames(1) as any); 
-          return newNames;
+        setVisibleNames((prevNames: any) => {
+          if (prevNames.length >= 4) {
+            return [...prevNames.slice(1), names[currentIndex]];
+          } else {
+            return [...prevNames, names[currentIndex]];
+          }
         });
         setFadeOutName(null);
-      //  setSlideOut(false);
-      },500); 
-    }, 1000); 
+        setFadeOut(false);
+      }, 500);
+
+
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, [names]); // Re-run effect when names change
-  
- 
+  }, [names, currentIndex]);
 
-  const getGames = async() =>{
-
+  const getGames = async () => {
     const shuffledGames = shuffleArray(data.games).slice(0, 5);
     setGames(shuffledGames);
-  }
+  };
 
   useEffect(() => {
-    
     getGames();
 
     const interval = setInterval(() => {
       getGames();
     }, getRandomInterval());
 
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval);
   }, []);
 
   const getRandomInterval = () => {
-    return Math.floor(Math.random() * (3600000 - 1800000 + 1)) + 1800000; 
+    return Math.floor(Math.random() * (3600000 - 1800000 + 1)) + 1800000;
   };
 
-  
-
-  const sortedGames = [...games].sort((a: any, b: any) => b.percentage - a.percentage);
+  const sortedGames = [...games].sort(
+    (a: any, b: any) => b.percentage - a.percentage
+  );
+  // const [animatedIndexes, setAnimatedIndexes] = useState<number[]>([]);
+  // useEffect(() => {
+  //   const newIndexes = visibleNames
+  //     ?.map((item: any, index: number) => index)
+  //     .filter((index: number) => !animatedIndexes.includes(index));
+  //   if (newIndexes.length > 0) {
+  //     setAnimatedIndexes((prevIndexes) => [...prevIndexes, ...newIndexes]);
+  //     console.log(animatedIndexes);
+  //   }
+  // }, [visibleNames]);
   return (
     <Layout>
       <Box
         sx={{
-          pt: 6,
+          pt: 2,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          //justifyContent: "center",
           alignItems: "center",
+          maxHeight: "150vh",
+          height: { xs: "100vh", md: "115vh" },
         }}
       >
         <Typography
@@ -123,13 +140,11 @@ const ScanGames = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 mt: 1,
-               
-                // opacity: fadeOutName === name ? 0 : 1, transition: 'opacity 0.5s ease-in-out' 
               }}
             >
               <Typography
                 sx={{
-                  fontSize:{xs:"12px",md:"14px"},
+                  fontSize: { xs: "12px", md: "14px" },
                   whiteSpace: "nowrap",
                 }}
               >
@@ -138,17 +153,20 @@ const ScanGames = () => {
                 {item.provider.name}
               </Typography>
               <Typography
-              sx={{
-                fontSize:{xs:"12px",md:"14px"},
-                whiteSpace: "nowrap"
-              }}>{`[Win ${item.percentage}]`}</Typography>
+                sx={{
+                  fontSize: { xs: "12px", md: "14px" },
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {`[Win ${item.percentage}]`}
+              </Typography>
             </Grid>
           ))}
 
           <Grid>
             <Button
               variant="contained"
-              onClick={() =>navigate('/select-provider')}
+              onClick={() => navigate("/select-provider")}
               sx={{
                 textTransform: "none",
                 bgcolor: "#A1A3A4",
@@ -167,71 +185,110 @@ const ScanGames = () => {
           </Grid>
         </Grid>
 
-        <Grid 
-        sx={{
-            bgcolor:"white",
-            width:{xs:"85%",md:"35%"},
-            pb:1
-        }}>
-            <Box
+        <Grid
+          sx={{
+            bgcolor: "white",
+            width: { xs: "85%", md: "35%" },
+            pb: 1,
+          }}
+        >
+          <Box
             sx={{
-                display:"flex",
-                alignItems:"center"
-            }}>
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <Typography
-            sx={{
-                p:"10px 2px 10px 10px",
-                fontSize:"12px",
-                fontWeight:"bold"
-            }}>
-                Recent Activity 
+              sx={{
+                p: "10px 2px 10px 10px",
+                fontSize: "12px",
+                fontWeight: "bold",
+              }}
+            >
+              Recent Activity
             </Typography>
-            <CircleIcon sx={{width:"13px", color:"#3CFF00"}}/>
+            <CircleIcon sx={{ width: "13px", color: "#3CFF00" }} />
+          </Box>
+          <hr />
+
+          {visibleNames.length === 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                my: 1,
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Typography sx={{ fontSize: "12px", textAlign: "center" }}>
+                loading activity...
+              </Typography>
+              <img src={loader} alt="loader" width="180px" />
             </Box>
-            <hr/>
-       
-
-        {names.map((item: any)=>(
-            <Grid
-            sx={{
-                bgcolor:"#F9F9F9",
-                m:"10px 10px 10px 10px",
-                p:1,
-                display:"flex",
-                opacity: fadeOutName === item ? 0 : 1,
-            transition: 'opacity 0.5s ease-in-out',
-            }}>
-                <Box sx={{width:"13px",height:"5px",bgcolor:"red",mt:"3px"}}/>
-                <Typography
+          ) : (
+            visibleNames?.map((item: any, index: number) => (
+              <Grid
+                key={index}
                 sx={{
-                    fontSize:"12px"
-                }}>
-                         <span style={{color:"#4483C4", fontWeight:"bold"}}>{item}</span>*** Has Inject Cheat SLOT
+                  bgcolor: "#F9F9F9",
+                  m: "10px",
+                  p: 1,
+                  display: "flex",
+
+                  animation:
+                    visibleNames.length === 1
+                      ? "fadeIn 2s ease-in-out"
+                      : visibleNames.length >= 4 &&
+                        index === visibleNames.length - 1 &&
+                        fadeOut
+                      ? "fadeIn 2s ease-in-out infinite"
+                      : index === 1 || index === 2
+                      ? "fadeIn 2s ease-in-out"
+                      : "",
+
+                  opacity:
+                    visibleNames.length >= 4 &&
+                    (index === 0 || index === visibleNames.length - 1)
+                      ? fadeOutName === item
+                        ? 0
+                        : 1
+                      : 1,
+                  transition: "opacity 0.5s ease-in-out",
+                }}
+              >
+                <img src={malaysianflag} width="13px" height="12px" />
+                <Typography sx={{ fontSize: "12px" }}>
+                  <span style={{ color: "#4483C4", fontWeight: "bold" }}>
+                    {item.finalwords}
+                  </span>{" "}
+                  * Has Inject Cheat SLOT
                 </Typography>
-            </Grid>
-        ))
+              </Grid>
+            ))
+          )}
 
-        }
-        <hr/>
-         </Grid>
+          <hr />
+        </Grid>
 
-         <Box
-         sx={{
-            textAlign:"center",
-            color:"white",
-            p:"10px 10px",
-            mt:2
-         }}>
-            <Typography sx={{fontSize:"12px"}}>
-                100% Tidak dapat dikesan
-            </Typography>
-            <Typography  sx={{fontSize:"12px",mt:1}}>
-                Cheatdigunakan untuk pelbagai jenis permainan
-            </Typography>
-            <Typography  sx={{fontSize:"12px",mt:1}}>
-                Penipuan yang sangat berkesan di laman web ini. 
-            </Typography>
-         </Box>
+        <Box
+          sx={{
+            textAlign: "center",
+            color: "white",
+            p: "10px 10px",
+            mt: 2,
+          }}
+        >
+          <Typography sx={{ fontSize: "12px" }}>
+            100% Tidak dapat dikesan
+          </Typography>
+          <Typography sx={{ fontSize: "12px", mt: 1 }}>
+            Cheatdigunakan untuk pelbagai jenis permainan
+          </Typography>
+          <Typography sx={{ fontSize: "12px", mt: 1 }}>
+            Penipuan yang sangat berkesan di laman web ini.
+          </Typography>
+        </Box>
       </Box>
     </Layout>
   );
