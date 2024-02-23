@@ -9,7 +9,7 @@ import {
 import Layout from "../PageLayout/Layout";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import background from '../assets/background.png';
+
 import data from '../utility/data.json';
 // import { getProviderGame } from "../api_calls/Games/getProviderGame";
 // import { toast } from "react-toastify";
@@ -176,10 +176,10 @@ const WinPage = () => {
         </Box>
         <Box
         sx={{
-          background:`url(${background})`,
-          backgroundSize:"cover",
-          backgroundRepeat:"no-repeat",
-          backgroundPosition:"50% 50%",
+          // background:`url(${background})`,
+          // backgroundSize:"cover",
+          // backgroundRepeat:"no-repeat",
+          // backgroundPosition:"50% 50%",
           my:8,
           maxHeight:"200px",
           overflowY:"auto",
@@ -189,7 +189,7 @@ const WinPage = () => {
           {
             sortedGames.map((item: any, index) => (
               index <= currentIndex &&
-              <Box key={index} sx={{ display: "flex", justifyContent: "space-between", color: "#C8AC2F" }}>
+              <Box key={index} sx={{ display: "flex", justifyContent: "space-between", color: "white" }}>
                 <Typography sx={{ fontWeight: "bold", fontSize: { xs: "12px", md: "14px" } , whiteSpace:"nowrap"}}>
                   {`${item.provider.name}/>KakiScanning=${item.title}`}
                 </Typography>

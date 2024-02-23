@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import logo from '../assets/logo.png'
-import whatsappIcon from '../assets/whatsappIcon.png';
+import whatsappIcon from '../assets/WhatsApp_icon.png';
 import telegramIcon from '../assets/telegramIcon.png';
 import { useState } from "react";
 import Layout from "../PageLayout/Layout";
@@ -169,13 +169,15 @@ const Login = ({handleIsLogin}: any) => {
 
       <Box 
       sx={{
-        mt:2
+        mt:2,
+        textAlign:"center",
+       
       }}>
       <Link>
       <img src={whatsappIcon} width="80px"/>
       </Link>
       <Link>
-      <img src={telegramIcon} width="81px" style={{marginLeft:"42px"}}/>
+      <img src={telegramIcon} width="72px" style={{marginLeft:"15px"}}/>
       </Link>
 
       </Box>

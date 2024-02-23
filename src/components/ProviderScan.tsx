@@ -1,146 +1,115 @@
-import {
-  Box,
-  Button,
-  MenuItem,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
 import Layout from "../PageLayout/Layout";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useEffect, useState } from "react";
 // import { getAllProviders } from "../api_calls/Games/getAllProviders";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import data from '../utility/providerData.json';
-import gamedata from '../utility/data.json'
+import data from "../utility/providerData.json";
+import gamedata from "../utility/data.json";
+import { TypeAnimation } from "./TypeAnimation";
 
 
 const ProviderScan = () => {
   const menuItems = [
-    "Pilih Cheater",
+    "-Pilih Cheat-",
     "Cheat Auto Scatter",
     "Auto Sensational",
     "Auto wild",
   ];
 
   const [processing, setProcessing] = useState(false);
-  const [serverMessages, setServerMessages] = useState([]);
   const [providers, setProviders] = useState([]);
-  const [providerId , setProviderId]=useState();
-  const [providerGames , setProviderGames] = useState([]);
-  const [cheatSheet , setCheatSheet] = useState("");
-  console.log(providerGames)
+  const [providerId, setProviderId] = useState();
+  const [cheatSheet, setCheatSheet] = useState("");
+  const [status ,setStatus]= useState(false)
 
-  const getProvidersGames = async () =>{
 
+
+  const getProvidersGames = async () => {
     const newData: any = [];
 
     providers.forEach((provider: any) => {
-      const providersGames = gamedata.games.filter(game => game.provider.name === provider?.name);
-      const sortedGames = providersGames.sort((a, b) => b.percentage - a.percentage);
+      const providersGames = gamedata.games.filter(
+        (game) => game.provider.name === provider?.name
+      );
+      const sortedGames = providersGames.sort(
+        (a, b) => b.percentage - a.percentage
+      );
       newData.push(sortedGames);
     });
 
-   setProviderGames(newData)
+  
+  };
 
+  useEffect(() => {
+    getProvidersGames();
+  }, []);
 
+  const navigate = useNavigate();
 
-   
-  }
+  const getProviders = async () => {
+    setProviders(data?.providers as any);
+  };
+  useEffect(() => {
+    getProviders();
+  }, []);
 
-  useEffect(()=>{
-    getProvidersGames()
-  },[])
-
-
-    const navigate = useNavigate()
-
-  const getProviders = async ()=>{
-
-    setProviders(data?.providers as any)
-
-  }
-  useEffect(()=>{
-    getProviders()
-     
-  },[])
-
-  const handleSelectChange = (e: any) =>{
+  const handleSelectChange = (e: any) => {
     e.preventDefault();
     setProvider(e.target.value);
-   const selectedProvider: any = providers.find((oneprovider: any) => oneprovider.name === e.target.value);
-    console.log(selectedProvider)
-    setProviderId(selectedProvider?.id)
+    const selectedProvider: any = providers.find(
+      (oneprovider: any) => oneprovider.name === e.target.value
+    );
+    console.log(selectedProvider);
+    setProviderId(selectedProvider?.id);
+  };
 
-  }
 
+  const [attemptSequence, setAttemptSequence] = useState('');
+
+  useEffect(() => {
+
+    const generateAttempts = () => {
+      const numAttempts = Math.floor(Math.random() * 4) + 1; 
+      let attempts = '';
+      for (let i = 1; i <= numAttempts; i++) {
+        if (i === numAttempts) {
+          attempts += `Attempt (${i}) to bypass the security System... <span style="color: green;">Done</span><br/>`;
+        } else {
+          attempts += `Attempt (${i}) to bypass the security System... Buffering<br/>`;
+        }
+      }
+      return attempts;
+    };
+
+    // Update the attempt sequence state with the generated attempts
+    setAttemptSequence(generateAttempts());
+  }, []);
   const connectToServer = async () => {
-   
-    const messages: any = [];
-
-    if(!providerId){
-      toast.error("Select a Provider")
-      return
+    if (!providerId) {
+      toast.error("Select a Provider");
+      return;
     }
 
-    if(!cheatSheet){
-      toast.error("Select cheat function")
-      return
-
+    if (!cheatSheet) {
+      toast.error("Pilih Cheat");
+      return;
     }
-
 
     setProcessing(true);
-    await simulateProcessing("Connecting to global server", messages); 
 
-    await simulateProcessing("Performing User Authentication", messages); 
+   
 
-    await simulateProcessing(
-      "Encrypting server: 256bit_Packet_Encryption",
-      messages
-    );
 
-    await simulateProcessing(
-      "Retrieving current server script: read_source_server_source",
-      messages
-    );
-
-    await simulateProcessing("Connect to database", messages);
-
-    await simulateProcessing(
-      "Attempt (1)  to bypass the security System",
-      messages
-    );
-
-    await simulateProcessing(
-      "Attempt (2)  to bypass the security System",
-      messages
-    );
-
-    await simulateProcessing(
-      "Sending Requested WINRATE to Your Account",
-      messages
-    );
-
-    await simulateProcessing(
-      "Sending Requested JACKPOT and WINRATE to Your Account",
-      messages
-    );
-
-    await simulateProcessing("Changing packets in the database", messages);
-
-    await simulateProcessing("Connecting to All slots Server", messages);
-
-    await simulateProcessing("Connecting to All slots database", messages);
-
-    await simulateProcessing("Generate WINRATE and JACKPOT", messages);
-
-    await simulateProcessing("Process was completed successfully", messages);
-
-    setServerMessages(messages);
-    setProcessing(false);
-    navigate(`/success-cheat/${providerId}`)
   };
+
+  useEffect(()=>{
+    if(status){
+      navigate(`/success-cheat/${providerId}`);
+      setProcessing(false);
+    }
+  },[status])
 
   // const displayProviders = async() =>{
 
@@ -148,8 +117,6 @@ const ProviderScan = () => {
   //   for (const provider of providers as any) {
   //     const providerGames = gamedata.games.filter(game => game.provider.name === provider?.name);
   //     const sortedGames = providerGames.sort((a, b) => b.percentage - a.percentage);
-
-  
 
   //     // Display each game of the provider
   //     for (const game of sortedGames) {
@@ -162,19 +129,13 @@ const ProviderScan = () => {
 
   // }
 
- 
-
   // const simulateProviderProcessing = async (message: any, messages: any) => {
   //   messages.push(message);
   //   setProviderMessages([...messages] as any);
-  //   await new Promise((resolve) => setTimeout(resolve, 2000)); 
+  //   await new Promise((resolve) => setTimeout(resolve, 2000));
   // };
 
-  const simulateProcessing = async (message: any, messages: any) => {
-    messages.push(message);
-    setServerMessages([...messages] as any);
-    await new Promise((resolve) => setTimeout(resolve, 2000)); 
-  };
+ 
   const [provider, setProvider] = useState("");
   return (
     <Layout>
@@ -185,9 +146,9 @@ const ProviderScan = () => {
           flexDirection: "column",
           //justifyContent: "center",
           alignItems: "center",
-          minHeight:'100vh',
-          maxheight:'300vh',
-          pb:6
+          minHeight: "100vh",
+          maxheight: "300vh",
+          pb: 6,
         }}
       >
         <Typography
@@ -199,7 +160,6 @@ const ProviderScan = () => {
             lineHeight: "45px",
             letterSpacing: "2px",
             pt: 1,
-
           }}
         >
           Choose Provider to scan
@@ -282,9 +242,12 @@ const ProviderScan = () => {
             "& .MuiOutlinedInput-notchedOutline": {
               border: "none",
             },
+            ".MuiInputLabel-root": {
+              color: "green",
+            },
           }}
         >
-          {providers.map((item: any,index) => (
+          {providers.map((item: any, index) => (
             <MenuItem key={index} value={item.name} sx={{ color: "green" }}>
               {item.name}
             </MenuItem>
@@ -295,11 +258,11 @@ const ProviderScan = () => {
           select
           name="cheatSheet"
           value={cheatSheet}
-          onChange={(e)=>  setCheatSheet(e.target.value)}
+          onChange={(e) => setCheatSheet(e.target.value)}
           SelectProps={{
             IconComponent: KeyboardArrowDownIcon,
           }}
-          label={cheatSheet === "" ? "Select Cheat function" : ""}
+          label={cheatSheet === "" ? "-Pilih Cheat-" : ""}
           InputLabelProps={{ shrink: false }}
           sx={{
             borderRadius: "14px",
@@ -310,9 +273,12 @@ const ProviderScan = () => {
             "& .MuiOutlinedInput-notchedOutline": {
               border: "none",
             },
+            ".MuiInputLabel-root": {
+              color: "green",
+            },
           }}
         >
-          {menuItems.map((item: any,index) => (
+          {menuItems.map((item: any, index) => (
             <MenuItem key={index} value={item} sx={{ color: "green" }}>
               {item}
             </MenuItem>
@@ -357,51 +323,42 @@ const ProviderScan = () => {
               <Box
                 sx={{
                   bgcolor: "#202124",
-                  width: {xs:"60%",md:"50%"},
+                  width: { xs: "60%", md: "50%" },
                   pl: 1,
                 }}
               >
                 <Typography sx={{ fontSize: "12px" }}>
-                  Connecting BBB Server
+                  Connecting B88 Server
                 </Typography>
                 <Typography sx={{ fontSize: "12px" }}>
-                  Connecting {`${provider}`} Server
+                  Connecting to {`${provider}`} Server
                 </Typography>
               </Box>
             </Box>
             <Box
               sx={{
                 borderLeft: "1px solid white",
-                boxShadow:"inset 0px 0px 10px 5px rgba(0, 0, 0, 0.2)",
-                pb:3
+                boxShadow: "inset 0px 0px 10px 5px rgba(0, 0, 0, 0.2)",
+                pb: 1,
+                pl:1
               }}
             >
-              {serverMessages.map((message, index) => (
-                <Typography
-                  key={index}
-                  sx={{
-                    fontSize: "10px",
-                    pl: 1,
-                    color:
-                      index === serverMessages.length - 1
-                        ? "#1B5D12"
-                        : "#368DE0",
-                  }}
-                  variant="body1"
-                >
-                  {"> "}
-                  {message}...
-                  {!(index === serverMessages.length - 1) && (
-                    <span style={{ color: index === 5 ? "red" : "#1B5D12" }}>
-                      {index === 0
-                        ? "Connected"
-                        : index === 5
-                        ? "Buffering"
-                        : "Done"}
-                    </span>
-                  )}
-                </Typography>
-              ))}
+
+              <TypeAnimation
+               sequence={[
+                `Connecting to global server... <span style="color: green">Connected</span><br/>Performing User Authentication... <span style="color: green">Done</span> <br/>Performing User Authentication... <span style="color: green">Done</span><br/>Encrypting server: 256bit_Packet_Encryption... <span style="color: green">Done</span><br/>Retrieving current server script: read_source_server_source... <span style="color: green">Done</span><br/>Connect to database... <span style="color: green">Done</span><br/>${attemptSequence}Sending Requested WINRATE to Your Account... <span style="color: green">Done</span><br/>Sending Requested JACKPOT and WINRATE to Your Account... <span style="color: green">Done</span><br/>Changing packets in the database... <span style="color: green">Done</span><br/>Connecting to All slots Server... <span style="color: green">Done</span><br/>Connecting to All slots database... <span style="color: green">Done</span><br/>Generate WINRATE and JACKPOT... <span style="color: green">Done</span><br/><span style="color: green">Process was completed successfully.</span><br/>`,
+              ]}
+              wrapper='span'
+              speed={10}
+              style={{
+                whiteSpace: 'pre-line',
+                fontSize: '11px',
+                color: '#368DE0',
+              }}
+              cursor={false}
+              setStatus={setStatus}
+              />
+          
             </Box>
           </Box>
         )}

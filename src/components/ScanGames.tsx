@@ -37,10 +37,12 @@ const ScanGames = () => {
       );
       console.log(firstRun);
       if (firstRun && visibleNames.length === 3) {
-        setFadeOutName(visibleNames[0]);
+        console.log(visibleNames);
+        setFadeOutName(visibleNames[3] as any);
+        console.log(fadeOutName);
         setFirstRun(false);
       } else {
-        setFadeOutName(visibleNames[1]);
+        setFadeOutName(visibleNames[2]);
       }
 
       setFadeOut(true);
@@ -48,7 +50,8 @@ const ScanGames = () => {
       setTimeout(() => {
         setVisibleNames((prevNames: any) => {
           if (prevNames.length >= 4) {
-            return [...prevNames.slice(1), names[currentIndex]];
+            //return [...prevNames.slice(1), names[currentIndex]];
+            return [names[currentIndex], ...prevNames.slice(0, 3)];
           } else {
             return [...prevNames, names[currentIndex]];
           }
@@ -56,8 +59,6 @@ const ScanGames = () => {
         setFadeOutName(null);
         setFadeOut(false);
       }, 500);
-
-
     }, 2000);
 
     return () => clearInterval(interval);
@@ -66,21 +67,36 @@ const ScanGames = () => {
   const getGames = async () => {
     const shuffledGames = shuffleArray(data.games).slice(0, 5);
     setGames(shuffledGames);
+    localStorage.setItem("lastFetchTime", new Date().getTime().toString());
+    localStorage.setItem("games", JSON.stringify(shuffledGames));
   };
 
   useEffect(() => {
-    getGames();
+    const lastFetchTime = localStorage.getItem("lastFetchTime");
+    const currentTime = new Date().getTime();
+    const twentyFourHours = 24 * 60 * 60 * 1000;
 
-    const interval = setInterval(() => {
+    if (lastFetchTime && currentTime - parseInt(lastFetchTime) < twentyFourHours) {
+      const storedGames = JSON.parse(localStorage.getItem("games") || "[]");
+      setGames(storedGames);
+    } else {
       getGames();
-    }, getRandomInterval());
-
-    return () => clearInterval(interval);
+      localStorage.setItem("lastFetchTime", currentTime.toString());
+    }
   }, []);
 
-  const getRandomInterval = () => {
-    return Math.floor(Math.random() * (3600000 - 1800000 + 1)) + 1800000;
-  };
+
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     getGames();
+    
+  //   }, 24 * 60 * 60 * 1000);
+
+  //   return () => clearInterval(interval);
+  // }, []);
+  
+ 
 
   const sortedGames = [...games].sort(
     (a: any, b: any) => b.percentage - a.percentage
@@ -105,7 +121,7 @@ const ScanGames = () => {
           //justifyContent: "center",
           alignItems: "center",
           maxHeight: "150vh",
-          height: { xs: "100vh", md: "115vh" },
+          height: { xs: "105vh", md: "115vh" },
         }}
       >
         <Typography
@@ -235,13 +251,10 @@ const ScanGames = () => {
                   m: "10px",
                   p: 1,
                   display: "flex",
-
                   animation:
                     visibleNames.length === 1
                       ? "fadeIn 2s ease-in-out"
-                      : visibleNames.length >= 4 &&
-                        index === visibleNames.length - 1 &&
-                        fadeOut
+                      : visibleNames.length >= 4 && index === 0 && fadeOut
                       ? "fadeIn 2s ease-in-out infinite"
                       : index === 1 || index === 2
                       ? "fadeIn 2s ease-in-out"
@@ -249,7 +262,7 @@ const ScanGames = () => {
 
                   opacity:
                     visibleNames.length >= 4 &&
-                    (index === 0 || index === visibleNames.length - 1)
+                    index === visibleNames.length - 1
                       ? fadeOutName === item
                         ? 0
                         : 1
@@ -277,16 +290,20 @@ const ScanGames = () => {
             color: "white",
             p: "10px 10px",
             mt: 2,
+          
           }}
         >
           <Typography sx={{ fontSize: "12px" }}>
             100% Tidak dapat dikesan
           </Typography>
           <Typography sx={{ fontSize: "12px", mt: 1 }}>
-            Cheatdigunakan untuk pelbagai jenis permainan
+          Cheat digunakan untuk pelbagai jenis permainan
           </Typography>
           <Typography sx={{ fontSize: "12px", mt: 1 }}>
-            Penipuan yang sangat berkesan di laman web ini.
+          Scanner yang sangat berkesan di laman web ini.
+          </Typography>
+          <Typography sx={{ fontSize: "12px", mt: 1 }}>
+          Copyright ©KakiScanner, all rights reserved 18+
           </Typography>
         </Box>
       </Box>
