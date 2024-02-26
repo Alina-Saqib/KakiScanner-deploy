@@ -1,6 +1,6 @@
 import  { useState, useEffect } from 'react';
 
-export const TypeAnimation = ({ sequence, wrapper, speed, style, cursor ,setStatus}: any) => {
+export const TypeAnimation = ({ sequence, wrapper, speed, style, cursor ,setStatus, setServerStatus}: any) => {
     const [text, setText] = useState('');
     const [currentIndex, setCurrentIndex] = useState(0);
    
@@ -24,10 +24,16 @@ export const TypeAnimation = ({ sequence, wrapper, speed, style, cursor ,setStat
 
     useEffect(() => {
         if (currentIndex === sequence.length && setStatus) {
-            console.log("here")
+           
             setStatus(true);
+           
         }
-    }, [currentIndex, sequence, setStatus]);
+        if (currentIndex === sequence.length && setServerStatus) {
+        
+          setServerStatus(true);
+         
+      }
+    }, [currentIndex, sequence, setStatus,setServerStatus]);
     
     
       const replaceBufferingColor = (str: any) => {

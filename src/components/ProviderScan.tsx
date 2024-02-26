@@ -22,7 +22,8 @@ const ProviderScan = () => {
   const [providers, setProviders] = useState([]);
   const [providerId, setProviderId] = useState();
   const [cheatSheet, setCheatSheet] = useState("");
-  const [status ,setStatus]= useState(false)
+  const [status ,setStatus]= useState(false);
+  const [serverStatus, setServerStatus] = useState(false)
 
 
 
@@ -327,12 +328,27 @@ const ProviderScan = () => {
                   pl: 1,
                 }}
               >
-                <Typography sx={{ fontSize: "12px" }}>
-                  Connecting B88 Server
+                {/* <Typography sx={{ fontSize: "11px" }}>
+                  Connecting B88 Server... Connected
                 </Typography>
-                <Typography sx={{ fontSize: "12px" }}>
-                  Connecting to {`${provider}`} Server
-                </Typography>
+                <Typography sx={{ fontSize: "11px" }}>
+                  Connecting to {`${provider}`} Server... Connected
+                </Typography> */}
+                <TypeAnimation
+                sequence={[
+                  `Connecting B88 Server... <span style="color: green">Connected</span><br/>Connecting to ${provider} Server... <span style="color: green">Connected</span>`
+                ]}
+                wrapper='span'
+              speed={10}
+              style={{
+                whiteSpace: 'pre-line',
+                fontSize: '11px',
+                color: 'white',
+              }}
+              cursor={false}
+              
+              setServerStatus={setServerStatus}/>
+
               </Box>
             </Box>
             <Box
@@ -343,22 +359,23 @@ const ProviderScan = () => {
                 pl:1
               }}
             >
-
-              <TypeAnimation
-               sequence={[
-                `Connecting to global server... <span style="color: green">Connected</span><br/>Performing User Authentication... <span style="color: green">Done</span> <br/>Performing User Authentication... <span style="color: green">Done</span><br/>Encrypting server: 256bit_Packet_Encryption... <span style="color: green">Done</span><br/>Retrieving current server script: read_source_server_source... <span style="color: green">Done</span><br/>Connect to database... <span style="color: green">Done</span><br/>${attemptSequence}Sending Requested WINRATE to Your Account... <span style="color: green">Done</span><br/>Sending Requested JACKPOT and WINRATE to Your Account... <span style="color: green">Done</span><br/>Changing packets in the database... <span style="color: green">Done</span><br/>Connecting to All slots Server... <span style="color: green">Done</span><br/>Connecting to All slots database... <span style="color: green">Done</span><br/>Generate WINRATE and JACKPOT... <span style="color: green">Done</span><br/><span style="color: green">Process was completed successfully.</span><br/>`,
-              ]}
-              wrapper='span'
-              speed={10}
-              style={{
-                whiteSpace: 'pre-line',
-                fontSize: '11px',
-                color: '#368DE0',
-              }}
-              cursor={false}
-              setStatus={setStatus}
-              />
-          
+         {serverStatus &&
+          <TypeAnimation
+          sequence={[
+           `Connecting to global server... <span style="color: green">Connected</span><br/>Performing User Authentication... <span style="color: green">Done</span> <br/>Encrypting server: 256bit_Packet_Encryption... <span style="color: green">Done</span><br/>Retrieving current server script: read_source_server_source... <span style="color: green">Done</span><br/>Connect to database... <span style="color: green">Done</span><br/>${attemptSequence}Sending Requested WINRATE to Your Account... <span style="color: green">Done</span><br/>Sending Requested JACKPOT and WINRATE to Your Account... <span style="color: green">Done</span><br/>Changing packets in the database... <span style="color: green">Done</span><br/>Connecting to All slots Server... <span style="color: green">Done</span><br/>Connecting to All slots database... <span style="color: green">Done</span><br/>Generate WINRATE and JACKPOT... <span style="color: green">Done</span><br/><span style="color: green">Process was completed successfully.</span><br/>`,
+         ]}
+         wrapper='span'
+         speed={10}
+         style={{
+           whiteSpace: 'pre-line',
+           fontSize: '11px',
+           color: '#368DE0',
+         }}
+         cursor={false}
+         setStatus={setStatus}
+         />
+     }
+             
             </Box>
           </Box>
         )}
