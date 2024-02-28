@@ -11,13 +11,7 @@ import { TypeAnimation } from "./TypeAnimation";
 
 
 const ProviderScan = () => {
-  const menuItems = [
-    "-Pilih Cheat-",
-    "Cheat Auto Scatter",
-    "Auto Sensational",
-    "Auto wild",
-  ];
-
+  const [menuItems,setMenuItems] = useState<Array<string>>([])
   const [processing, setProcessing] = useState(false);
   const [providers, setProviders] = useState([]);
   const [providerId, setProviderId] = useState();
@@ -64,8 +58,37 @@ const ProviderScan = () => {
     );
     console.log(selectedProvider);
     setProviderId(selectedProvider?.id);
+  
+    // Update menuItems based on selected provider
+    if (selectedProvider?.name === 'Mega888' || selectedProvider?.name === '918Kiss' || selectedProvider?.name === 'Pussy888') {
+      setCheatSheet(''); // Reset cheat sheet selection
+      setMenuItems([
+        "-Pilih Cheat-",
+        "Free Angpow",
+        "Random Jackpot",
+        "Ultra Mega Bigwin",
+        "Free Game"
+      ]);
+    } else if (selectedProvider?.name === 'Playtech') {
+      setCheatSheet('');
+      setMenuItems([
+        "-Pilih Cheat-",
+        "Free Game",
+        "Random Jackpot",
+        "Ultra Mega Big Win",
+        "Super Big Win"
+      ]);
+    }else{
+      setCheatSheet('');
+      setMenuItems([
+        "-Pilih Cheat-",
+        "Cheat Auto Scatter",
+        "Auto Sensational",
+        "Auto wild",
+      ]);
+    }
   };
-
+  
 
   const [attemptSequence, setAttemptSequence] = useState('');
 
@@ -321,20 +344,20 @@ const ProviderScan = () => {
                 boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",
               }}
             >
-              <Box
+              {/* <Box
                 sx={{
                   bgcolor: "#202124",
                   width: { xs: "60%", md: "50%" },
                   pl: 1,
                 }}
-              >
+              > */}
                 {/* <Typography sx={{ fontSize: "11px" }}>
                   Connecting B88 Server... Connected
                 </Typography>
                 <Typography sx={{ fontSize: "11px" }}>
                   Connecting to {`${provider}`} Server... Connected
                 </Typography> */}
-                <TypeAnimation
+                {/* <TypeAnimation
                 sequence={[
                   `Connecting B88 Server... <span style="color: green">Connected</span><br/>Connecting to ${provider} Server... <span style="color: green">Connected</span>`
                 ]}
@@ -347,9 +370,17 @@ const ProviderScan = () => {
               }}
               cursor={false}
               
-              setServerStatus={setServerStatus}/>
+              setServerStatus={setServerStatus}/> */}
+              <Box sx={{
+                textAlign:"center"
+              }}>
+               <Typography sx={{ fontSize: "14px" }}>
+                 {serverStatus ? "SUCCESS!" : "Scanning"}
+                </Typography>
+                </Box> 
 
-              </Box>
+
+              {/* </Box> */}
             </Box>
             <Box
               sx={{
@@ -359,10 +390,10 @@ const ProviderScan = () => {
                 pl:1
               }}
             >
-         {serverStatus &&
+         
           <TypeAnimation
           sequence={[
-           `Connecting to global server... <span style="color: green">Connected</span><br/>Performing User Authentication... <span style="color: green">Done</span> <br/>Encrypting server: 256bit_Packet_Encryption... <span style="color: green">Done</span><br/>Retrieving current server script: read_source_server_source... <span style="color: green">Done</span><br/>Connect to database... <span style="color: green">Done</span><br/>${attemptSequence}Sending Requested WINRATE to Your Account... <span style="color: green">Done</span><br/>Sending Requested JACKPOT and WINRATE to Your Account... <span style="color: green">Done</span><br/>Changing packets in the database... <span style="color: green">Done</span><br/>Connecting to All slots Server... <span style="color: green">Done</span><br/>Connecting to All slots database... <span style="color: green">Done</span><br/>Generate WINRATE and JACKPOT... <span style="color: green">Done</span><br/><span style="color: green">Process was completed successfully.</span><br/>`,
+           `Connecting B88 Server... <span style="color: green">Connected</span><br/>Connecting to ${provider} Server... <span style="color: green">Connected</span><br/>Connecting to global server... <span style="color: green">Connected</span><br/>Performing User Authentication... <span style="color: green">Done</span> <br/>Encrypting server: 256bit_Packet_Encryption... <span style="color: green">Done</span><br/>Retrieving current server script: read_source_server_source... <span style="color: green">Done</span><br/>Connect to database... <span style="color: green">Done</span><br/>${attemptSequence}Sending Requested WINRATE to Your Account... <span style="color: green">Done</span><br/>Sending Requested JACKPOT and WINRATE to Your Account... <span style="color: green">Done</span><br/>Changing packets in the database... <span style="color: green">Done</span><br/>Connecting to All slots Server... <span style="color: green">Done</span><br/>Connecting to All slots database... <span style="color: green">Done</span><br/>Generate WINRATE and JACKPOT... <span style="color: green">Done</span><br/><span style="color: green">Process was completed successfully.</span><br/>`,
          ]}
          wrapper='span'
          speed={10}
@@ -373,8 +404,9 @@ const ProviderScan = () => {
          }}
          cursor={false}
          setStatus={setStatus}
+         setServerStatus={setServerStatus}
          />
-     }
+     
              
             </Box>
           </Box>

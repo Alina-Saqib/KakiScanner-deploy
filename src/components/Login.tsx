@@ -13,9 +13,14 @@ import { useState } from "react";
 import Layout from "../PageLayout/Layout";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import kiss from "../assets/918kiss.png";
+import playtech from "../assets/11-playtech-white.png";
+import pragmaticPlay from "../assets/12 pragmatic play.png";
+import pussy from "../assets/3 Pussy888.png";
+import mega from "../assets/mega888_logo.png";
 
 const Login = ({handleIsLogin}: any) => {
- console.log('login')
+ 
   const [username , setUsername] = useState("");
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
@@ -98,6 +103,7 @@ const Login = ({handleIsLogin}: any) => {
             border:"none",
             bgcolor: "#a1a2a2",
             borderRadius:"16px",
+            opacity:0.5,
             '& .MuiOutlinedInput-notchedOutline': {
               border: 'none',
             },
@@ -115,6 +121,7 @@ const Login = ({handleIsLogin}: any) => {
             bgcolor: "#a1a2a2",
             border:"none",
             borderRadius:"16px",
+            opacity:0.5,
             '& .MuiOutlinedInput-notchedOutline': {
               border: 'none',
             },
@@ -159,18 +166,33 @@ const Login = ({handleIsLogin}: any) => {
         </Box>
       </form>
 
+      <Box sx={{width:{md:'40%'},mt:2, display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center"}} gap="12px">
+        <Box display="flex" gap="10px" sx={{alignContent:"center",textAlign:"center"}}>
+        <img src={mega} width="150px"/>
+        <img src={kiss} width="80px"/>
+        <img src={pussy} width="80px"/>
+        </Box>
+        <Box display="flex" gap="16px" sx={{alignContent:"center",textAlign:"center"}}>
+        <img src={playtech} width="150px"/>
+        <img src={pragmaticPlay} width="80px"/>
+        </Box>
+      </Box>
+
       <Typography
       variant="body1"
       sx={{
         color:"white",
         letterSpacing:"1px",
         mt:2
-      }}>Contact Admin</Typography>
+      }}>Join Community</Typography>
 
       <Box 
       sx={{
-        mt:2,
+        
         textAlign:"center",
+        width:{md:"17%",xs:"70%"},
+        display:"flex",
+        justifyContent:"space-between"
        
       }}>
       <Link>

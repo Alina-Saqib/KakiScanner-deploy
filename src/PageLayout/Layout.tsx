@@ -1,6 +1,6 @@
 import { Box, useMediaQuery } from "@mui/material"
-import bgImage from '../assets/background-small.gif';
-import bgImage2 from '../assets/background-large.gif';
+import bgImage from '../assets/kaki-scanner-bg-360x780.jpg';
+import bgImage2 from '../assets/kaki-scanner-bg-1440x1080.jpg';
 
 const Layout = ({children}: any) => {
 

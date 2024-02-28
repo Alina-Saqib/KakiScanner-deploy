@@ -21,19 +21,27 @@ export const TypeAnimation = ({ sequence, wrapper, speed, style, cursor ,setStat
   
       return () => clearTimeout(timer);
     }, [currentIndex, sequence, speed, text]);
-
     useEffect(() => {
-        if (currentIndex === sequence.length && setStatus) {
-           
-            setStatus(true);
-           
-        }
-        if (currentIndex === sequence.length && setServerStatus) {
-        
-          setServerStatus(true);
-         
+      // Define a function to update status after 3 seconds
+      const updateStatusAfterDelay = () => {
+        setTimeout(() => {
+          setStatus(true);
+          
+        }, 1000);
+      };
+  
+     
+      if (currentIndex === sequence.length && setStatus && setServerStatus) {
+        setServerStatus(true);
+        updateStatusAfterDelay();
       }
-    }, [currentIndex, sequence, setStatus,setServerStatus]);
+  
+      
+      return () => {
+        clearTimeout(updateStatusAfterDelay as any);
+      };
+    }, [currentIndex, sequence, setStatus, setServerStatus]);
+  
     
     
       const replaceBufferingColor = (str: any) => {
