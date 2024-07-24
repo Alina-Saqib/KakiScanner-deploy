@@ -2,11 +2,9 @@ import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
 import Layout from "../PageLayout/Layout";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useEffect, useState } from "react";
-// import { getAllProviders } from "../api_calls/Games/getAllProviders";
+import { getAllProviders } from "../api_calls/Games/getAllProviders";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import data from "../utility/providerData.json";
-import gamedata from "../utility/data.json";
 import { TypeAnimation } from "./TypeAnimation";
 
 
@@ -18,24 +16,19 @@ const ProviderScan = () => {
   const [cheatSheet, setCheatSheet] = useState("");
   const [status ,setStatus]= useState(false);
   const [serverStatus, setServerStatus] = useState(false)
-
+  const [provider, setProvider] = useState("");
 
 
   const getProvidersGames = async () => {
-    const newData: any = [];
-
-    providers.forEach((provider: any) => {
-      const providersGames = gamedata.games.filter(
-        (game) => game.provider.name === provider?.name
-      );
-      const sortedGames = providersGames.sort(
-        (a, b) => b.percentage - a.percentage
-      );
-      newData.push(sortedGames);
-    });
-
-  
+    const response = await getAllProviders();
+    if(response?.status === 200){
+      const filteredProviders = response.data.filter((provider: any) => provider.hideProvider === false);
+      setProviders(filteredProviders);
+    } else {
+      toast.error("Error in fetching providers");
+    }
   };
+  
 
   useEffect(() => {
     getProvidersGames();
@@ -43,12 +36,7 @@ const ProviderScan = () => {
 
   const navigate = useNavigate();
 
-  const getProviders = async () => {
-    setProviders(data?.providers as any);
-  };
-  useEffect(() => {
-    getProviders();
-  }, []);
+ 
 
   const handleSelectChange = (e: any) => {
     e.preventDefault();
@@ -56,11 +44,10 @@ const ProviderScan = () => {
     const selectedProvider: any = providers.find(
       (oneprovider: any) => oneprovider.name === e.target.value
     );
-    console.log(selectedProvider);
-    setProviderId(selectedProvider?.id);
-  
+    setProviderId(selectedProvider?._id);
+    const name =selectedProvider?.name
     // Update menuItems based on selected provider
-    if (selectedProvider?.name === 'Mega888' || selectedProvider?.name === '918Kiss' || selectedProvider?.name === 'Pussy888') {
+    if (name.toLowerCase() === 'mega888' || name.toLowerCase() === '918kiss' || name.toLowerCase() === 'pussy888') {
       setCheatSheet(''); // Reset cheat sheet selection
       setMenuItems([
         "-Pilih Cheat-",
@@ -69,14 +56,13 @@ const ProviderScan = () => {
         "Ultra Mega Bigwin",
         "Free Game"
       ]);
-    } else if (selectedProvider?.name === 'Playtech') {
+    } else if (name.toLowerCase() === 'playtech') {
       setCheatSheet('');
       setMenuItems([
         "-Pilih Cheat-",
-        "Free Game",
-        "Random Jackpot",
-        "Ultra Mega Big Win",
-        "Super Big Win"
+        "Auto Free Games",
+        "Auto Big/Mega Win",
+        "Auto Featured Jackpot"
       ]);
     }else{
       setCheatSheet('');
@@ -85,6 +71,8 @@ const ProviderScan = () => {
         "Cheat Auto Scatter",
         "Auto Sensational",
         "Auto wild",
+        "Cheat Max Win",
+        "Cheat Auto Jackpot"
       ]);
     }
   };
@@ -111,6 +99,7 @@ const ProviderScan = () => {
     setAttemptSequence(generateAttempts());
   }, []);
   const connectToServer = async () => {
+   
     if (!providerId) {
       toast.error("Select a Provider");
       return;
@@ -135,32 +124,9 @@ const ProviderScan = () => {
     }
   },[status])
 
-  // const displayProviders = async() =>{
 
-  //   let data: any = []
-  //   for (const provider of providers as any) {
-  //     const providerGames = gamedata.games.filter(game => game.provider.name === provider?.name);
-  //     const sortedGames = providerGames.sort((a, b) => b.percentage - a.percentage);
-
-  //     // Display each game of the provider
-  //     for (const game of sortedGames) {
-  //       data.push(`${game.provider.name}/>KakiScanning=${game.title}                [Win ${game.percentage}]`);
-  //       await  simulateProviderProcessing('', data);
-  //     }
-  //   }
-
-  //   setProviderMessages(data)
-
-  // }
-
-  // const simulateProviderProcessing = async (message: any, messages: any) => {
-  //   messages.push(message);
-  //   setProviderMessages([...messages] as any);
-  //   await new Promise((resolve) => setTimeout(resolve, 2000));
-  // };
 
  
-  const [provider, setProvider] = useState("");
   return (
     <Layout>
       <Box

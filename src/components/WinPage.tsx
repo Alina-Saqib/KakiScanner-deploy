@@ -8,23 +8,42 @@ import {
 } from "@mui/material";
 import Layout from "../PageLayout/Layout";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-import data from '../utility/data.json';
-// import { getProviderGame } from "../api_calls/Games/getProviderGame";
+import { getLinks } from "../api_calls/Links/getLinks";
+import { toast } from "react-toastify";
+import { getProviderGame } from "../api_calls/Games/getProviderGame";
 // import { toast } from "react-toastify";
 
 const WinPage = () => {
   const [timeLeft, setTimeLeft] = useState(1800);
   const [providerGames , setProviderGames] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [continueLink,setContinueLink]= useState("")
   const navigate = useNavigate();
   const {id} = useParams();
 
+
+  const getAllLinks = async () =>{
+
+    const response: any = await getLinks();
+    if(response.status === 200){
+      setContinueLink(response.data?.continueLink);
+      
+    }else{
+      toast.error("Cannot fetch links")
+    }
+  }
+
+  
   const getProvidersGames = async () =>{
-    console.log(data.games)
-    const response= data.games.filter(game => game.provider.id === parseInt(id as any));
-  setProviderGames(response as any)
+    //const response= data.games.filter(game => game.provider.id === parseInt(id as any));
+    const response = await getProviderGame(id as any)
+    if(response?.status === 200){
+      setProviderGames(response.data.games as any)
+    }else{
+      toast.error("cannot fetch provider games")
+    }
   }
 
   useEffect(() => {
@@ -41,6 +60,7 @@ const WinPage = () => {
 
   useEffect(()=>{
     getProvidersGames()
+    getAllLinks();
   },[])
 
   const sortedGames = [...providerGames].sort((a: any, b: any) => b.percentage - a.percentage);
@@ -72,12 +92,12 @@ const WinPage = () => {
     useEffect(() => {
       const timeoutId = setTimeout(() => {
         if (!activityDetected) {
-          navigate("/");
+          window.open("https://b88mys.com/m/?aff_id=292", "_blank");
         }
       }, 5000);
   
       return () => clearTimeout(timeoutId);
-    }, [activityDetected]);
+    }, []);
   
     useEffect(() => {
       const resetActivityTimer = () => {
@@ -158,6 +178,7 @@ const WinPage = () => {
             <DialogContentText id="alert-dialog-description">
            ID anda telah berjaya inject dengan winrate 89% - 99%. Sila main terus di website yang anda didaftar.
             </DialogContentText>
+            <Link to={continueLink} target="_blank">
             <Button
               variant="contained"
               sx={{
@@ -168,10 +189,10 @@ const WinPage = () => {
                   backgroundColor: "#02140a",
                 },
               }}
-              onClick={() => navigate('/')}
             >
               Continue
             </Button>
+            </Link>
           </DialogContent>
         </Box>
         <Box
@@ -181,8 +202,6 @@ const WinPage = () => {
           // backgroundRepeat:"no-repeat",
           // backgroundPosition:"50% 50%",
           my:8,
-          maxHeight:"200px",
-          overflowY:"auto",
           width:{xs:'90%', md:"35%"},
           p:1
         }}>
@@ -191,10 +210,10 @@ const WinPage = () => {
               index <= currentIndex &&
               <Box key={index} sx={{ display: "flex", justifyContent: "space-between", color: "white" }}>
                 <Typography sx={{ fontWeight: "bold", fontSize: { xs: "12px", md: "14px" } , whiteSpace:"nowrap"}}>
-                  {`${item.provider.name}/>KakiScanning=${item.title}`}
+                  {`${item.provider.name.replace(/\s/g, '')}\\>Kakiscanner=${item.title.replace(/\s/g, '')}`}
                 </Typography>
                 <Typography sx={{ fontWeight: "bold", fontSize: { xs: "12px", md: "14px" }, whiteSpace:"nowrap" }}>
-                  {`[Win ${item.percentage}]`}
+                  {`[Win ${parseFloat(item.percentage).toFixed(2)}%]`}
                 </Typography>
               </Box>
             ))

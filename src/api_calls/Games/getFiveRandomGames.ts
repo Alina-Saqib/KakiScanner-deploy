@@ -1,10 +1,9 @@
 import axios from '../BaseUrl'
 
-export const getFiveRandomGames = async() =>{
+export const gettop5Games = async() =>{
 
-  try{  const response = await axios.get('/games/get-randomGames')
+  try{  const response = await axios.get('/games/get-top5games')
 
-  console.log(response)
   return response
 }catch(error){
     console.log(error);

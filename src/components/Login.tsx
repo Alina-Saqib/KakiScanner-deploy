@@ -2,32 +2,37 @@ import {
   Box,
   Button,
   InputLabel,
-  Link,
   TextField,
   Typography,
 } from "@mui/material";
 import logo from '../assets/logo.png'
 import whatsappIcon from '../assets/WhatsApp_icon.png';
 import telegramIcon from '../assets/telegramIcon.png';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../PageLayout/Layout";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import kiss from "../assets/918kiss.png";
 import playtech from "../assets/11-playtech-white.png";
 import pragmaticPlay from "../assets/12 pragmatic play.png";
 import pussy from "../assets/3 Pussy888.png";
 import mega from "../assets/mega888_logo.png";
+import { getLinks } from "../api_calls/Links/getLinks";
+import { Link } from "react-router-dom";
 
 const Login = ({handleIsLogin}: any) => {
  
   const [username , setUsername] = useState("");
-  const [password, setPassword] = useState("")
+  const [password, setPassword] = useState("");
+  const [whatsappLink ,setWhatsappLink] = useState("");
+  const [telegramLink ,setTelegramLink] = useState("");
+  const [daftarLink,setDaftarLink] = useState("");
+
   const navigate = useNavigate()
 
   const handleLogin = () =>{
 
-    if(username === 'test' && password === '1234'){
+    if(username.trim() !== "" && password.trim() !== ""){
       localStorage.setItem('isLogin','true')
       handleIsLogin();
       navigate('/')
@@ -36,9 +41,24 @@ const Login = ({handleIsLogin}: any) => {
      
       
     }else{
-      toast.error("Invalid username or password")
+      toast.error("Fill fields username or password")
     }
   }
+
+  const getAllLinks = async () =>{
+
+    const response: any = await getLinks();
+    if(response.status === 200){
+      setWhatsappLink(response.data?.whatsappLink);
+      setTelegramLink(response.data?.telegramLink);
+      setDaftarLink(response.data?.daftarLink);
+    }else{
+      toast.error("Cannot fetch links")
+    }
+  }
+  useEffect(()=>{
+    getAllLinks()
+  },[])
   return (
    <Layout>
 
@@ -75,13 +95,14 @@ const Login = ({handleIsLogin}: any) => {
         }}
       >
         Belum ada ID? daftar di website yang kami hack.{" "}
-        <Link
-          sx={{
-            color: "#c7c8c7",
-            textDecoration: '2px solid underline'
-          }}
-        >
+        <Link to={daftarLink} target="_blank">
+          <span style={{  color: "#c7c8c7",
+            textDecoration: '2px solid underline'}}>
+           
+
           Daftar Sini
+            
+          </span>
         </Link>
       </Typography>
 
@@ -131,6 +152,7 @@ const Login = ({handleIsLogin}: any) => {
         sx={{
           mt:2
         }}>
+          <Link to={daftarLink} target="_blank">
           <Button
             variant="outlined"
             sx={{
@@ -146,6 +168,7 @@ const Login = ({handleIsLogin}: any) => {
           >
             Daftar
           </Button>
+          </Link>
           <Button
             variant="contained"
             onClick={handleLogin}
@@ -195,11 +218,11 @@ const Login = ({handleIsLogin}: any) => {
         justifyContent:"space-between"
        
       }}>
-      <Link>
+      <Link to={whatsappLink} target="_blank" rel="noreferrer">
       <img src={whatsappIcon} width="80px"/>
       </Link>
-      <Link>
-      <img src={telegramIcon} width="72px" style={{marginLeft:"15px"}}/>
+      <Link to={telegramLink} target="_blank" rel="noreferrer">
+      <img src={telegramIcon} width="72px" style={{marginLeft:"15px"}} />
       </Link>
 
       </Box>

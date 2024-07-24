@@ -5,11 +5,12 @@ import CircleIcon from "@mui/icons-material/Circle";
 import { useEffect, useState } from "react";
 // import { getFiveRandomGames } from "../api_calls/Games/getFiveRandomGames";
 import { useNavigate } from "react-router-dom";
-import data from "../utility/data.json";
 import { shuffleArray } from "../utility/shuffleFunction";
 import malaysianflag from "../assets/malaysian-flag.png";
 import playerUsername from "../utility/playerUsername.json";
 import loader from "../assets/loader.gif";
+import { gettop5Games } from "../api_calls/Games/getFiveRandomGames";
+import { toast } from "react-toastify";
 
 const ScanGames = () => {
   const navigate = useNavigate();
@@ -35,11 +36,11 @@ const ScanGames = () => {
       setCurrentIndex((prevIndex) =>
         prevIndex === names.length - 1 ? 0 : prevIndex + 1
       );
-      console.log(firstRun);
+      
       if (firstRun && visibleNames.length === 3) {
-        console.log(visibleNames);
+       
         setFadeOutName(visibleNames[3] as any);
-        console.log(fadeOutName);
+    
         setFirstRun(false);
       } else {
         setFadeOutName(visibleNames[2]);
@@ -65,52 +66,31 @@ const ScanGames = () => {
   }, [names, currentIndex]);
 
   const getGames = async () => {
-    const shuffledGames = shuffleArray(data.games).slice(0, 5);
-    setGames(shuffledGames);
-    localStorage.setItem("lastFetchTime", new Date().getTime().toString());
-    localStorage.setItem("games", JSON.stringify(shuffledGames));
+
+    const response = await gettop5Games();
+    if(response?.status === 200){
+      setGames(response.data)
+    }else{
+      toast.error("error in fetching top 5 games")
+    }
+  
   };
 
-  useEffect(() => {
-    const lastFetchTime = localStorage.getItem("lastFetchTime");
-    const currentTime = new Date().getTime();
-    const twentyFourHours = 24 * 60 * 60 * 1000;
-
-    if (lastFetchTime && currentTime - parseInt(lastFetchTime) < twentyFourHours) {
-      const storedGames = JSON.parse(localStorage.getItem("games") || "[]");
-      setGames(storedGames);
-    } else {
-      getGames();
-      localStorage.setItem("lastFetchTime", currentTime.toString());
-    }
-  }, []);
+  useEffect(()=>{
+  getGames();
+  },[])
 
 
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     getGames();
-    
-  //   }, 24 * 60 * 60 * 1000);
 
-  //   return () => clearInterval(interval);
-  // }, []);
-  
+
+
  
 
   const sortedGames = [...games].sort(
     (a: any, b: any) => b.percentage - a.percentage
   );
-  // const [animatedIndexes, setAnimatedIndexes] = useState<number[]>([]);
-  // useEffect(() => {
-  //   const newIndexes = visibleNames
-  //     ?.map((item: any, index: number) => index)
-  //     .filter((index: number) => !animatedIndexes.includes(index));
-  //   if (newIndexes.length > 0) {
-  //     setAnimatedIndexes((prevIndexes) => [...prevIndexes, ...newIndexes]);
-  //     console.log(animatedIndexes);
-  //   }
-  // }, [visibleNames]);
+
   return (
     <Layout>
       <Box
@@ -141,9 +121,9 @@ const ScanGames = () => {
 
         <Grid
           sx={{
-            p: "32px 40px",
+            p: "32px 20px",
             textAlign: "center",
-            width: { xs: "100%", md: "35%", lg: "30%" },
+            width: { xs: "100%", md: "50%", lg: "36%" },
           }}
         >
           {sortedGames.map((item: any) => (
@@ -174,7 +154,7 @@ const ScanGames = () => {
                   whiteSpace: "nowrap",
                 }}
               >
-                {`[Win ${item.percentage}]`}
+                {`[Win ${parseFloat(item.percentage).toFixed(2)}%]`}
               </Typography>
             </Grid>
           ))}
